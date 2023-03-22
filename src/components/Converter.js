@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Selector from './Selector';
 import Spinner from './Spinner';
+import { Button, TextField } from '@mui/material';
 
 export default function Converter(props) {
 
@@ -22,27 +23,52 @@ export default function Converter(props) {
       headers: headers
     };
 
-    let responce = await fetch(`https://api.apilayer.com/exchangerates_data/convert?from=${from}&to=${to}&amount=${amount}`, options);
-    let data = await responce.json();
+    const responce = await fetch(`https://api.apilayer.com/exchangerates_data/convert?from=${from}&to=${to}&amount=${amount}`, options);
+    const data = await responce.json();
+    setResult((parseFloat(data.info.rate) * parseFloat(amount)).toString());
     setLoading(false);
-    setResult(data.info.rate);
   }
 
   const changeAmount = (Event) => {
-    if(Event.value === undefined)
+    if(Event.target.value === undefined)
       setAmount('');
     else
-      setAmount(Event.value);
+      setAmount(Event.target.value);
   }
 
   return (
-    <>
-      <Selector label='from' setCurrency={setFrom} />
-      <Selector label='to' setCurrency={setTo} />
-      <input onChange={changeAmount} defaultValue={amount} type='text' />
-      <button onClick={convert}>Convert</button>
-      <h2>{ loading && <Spinner/> }</h2>
-      <h1>{ result }</h1>
-    </>
+    <div className='container p-2'>
+      <div className='row'>
+        <div className='col mx-2 p-3'>
+          <Selector label='from' curr={from} setCurrency={setFrom} />
+        </div>
+        <div className='col mx-2 p-3'>
+          <Selector label='to' curr={to} setCurrency={setTo} />
+        </div>
+      </div>
+      <div className='row'>
+        <div className='col mx-2 p-2 d-flex justify-content-center'>
+          <TextField 
+            onChange={changeAmount} 
+            value={amount}
+            id='outlined-basic' 
+            label='Amount' 
+            variant='outlined'
+            sx={{ m: 2 }}
+          />
+        </div>
+      </div>
+      <div className='row mt-3'>
+        <div className='col mx-2 p-2 d-flex justify-content-center'>
+          <Button onClick={convert} variant='contained'>Convert</Button>
+        </div>
+      </div>
+      <div className='row mt-3'>
+        <div className='col mx-2 p-2 d-flex justify-content-center'>
+          { loading && <Spinner/> }
+          { !loading && <h2>Result: {result}</h2> }
+        </div>
+      </div>
+    </div>
   );
 }

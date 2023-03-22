@@ -1,4 +1,5 @@
 import React from 'react'
+import { Select, MenuItem, FormControl } from '@mui/material';
 
 const currencies = [
 	[ 'AED', 'United Arab Emirates Dirham' ],
@@ -171,22 +172,35 @@ const currencies = [
 	[ 'ZMK', 'Zambian Kwacha (pre-2013)' ],
 	[ 'ZMW', 'Zambian Kwacha' ],
 	[ 'ZWL', 'Zimbabwean Dollar' ] 
-]
+];
 
 export default function Selector(props) {
 
-	const handleChange = (option) => {
-		props.setCurrency(option.target.value);
+	const handleChange = (e) => {
+		props.setCurrency(e.target.value);
 	}
 
   return (
-    <>
-			<label htmlFor=''>{props.label}</label>
-      <select onChange={handleChange} className='form-select' aria-label='Default select example'>
-				{currencies.map(([currency, country]) => {
-					return <option key={currency} value={currency} >{`${currency}: ${country}`}</option>
-				})}
-			</select>
-    </>
+		<div className='col'>
+			<div className='row'>
+				<label>{props.label}</label>
+			</div>
+			<div className='row'>
+				<FormControl variant='standard' sx={{ m: 0, minWidth: 100 }}>
+					<Select
+						labelId={props.label}
+						id='outlined-basic'
+						aria-label='Default select example'
+						variant='outlined'
+						value={props.curr}
+						onChange={handleChange}
+					>
+						{currencies.map(([currency, country]) => {
+							return <MenuItem key={currency} value={currency}>{`${currency}: ${country}`}</MenuItem>
+						})}
+					</Select>
+				</FormControl>
+			</div>
+		</div>
   );
 }

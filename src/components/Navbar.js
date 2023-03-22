@@ -2,7 +2,6 @@ import React from 'react'
 
 export default function Navbar() {
   return (
-    <>
 		<nav className='navbar navbar-expand-lg bg-body-tertiary'>
       <div className='container-fluid'>
         <a className='navbar-brand' href='/'>CurrencyConvert</a>
@@ -17,13 +16,9 @@ export default function Navbar() {
             <li className='nav-item'>
               <a className='nav-link' href='/'>About</a>
             </li>
-            {/* <li className='nav-item'>
-              <a className='nav-link' href='/'>Pricing</a>
-            </li> */}
           </ul>
         </div>
       </div>
     </nav>
-    </>
   );
 }

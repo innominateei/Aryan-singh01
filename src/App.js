@@ -1,16 +1,12 @@
-import './App.css';
 import Converter from './components/Converter';
 import Navbar from './components/Navbar';
 
 function App() {
-
-  const apiKey = process.env.REACT_APP_API_KEY;
-
   return (
-    <>
+    <div>
       <Navbar />
-      <Converter apiKey={apiKey} />
-    </>
+      <Converter apiKey={process.env.REACT_APP_API_KEY} />
+    </div>
   );
 }
 
