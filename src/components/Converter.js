@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import propTypes from 'prop-types';
 import Selector from './Selector';
 import Spinner from './Spinner';
 import { Button, TextField } from '@mui/material';
@@ -90,4 +91,8 @@ export default function Converter(props) {
       </div>
     </div>
   );
+}
+
+Converter.propTypes = {
+  apiKey: propTypes.string
 }

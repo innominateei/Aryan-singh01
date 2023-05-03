@@ -1,4 +1,5 @@
 import React from 'react'
+import propTypes from 'prop-types';
 import { Select, MenuItem, FormControl } from '@mui/material';
 
 const currencies = [
@@ -208,4 +209,10 @@ export default function Selector(props) {
 			</div>
 		</div>
   );
+}
+
+Selector.propTypes = {
+	label: propTypes.string,
+	curr: propTypes.string,
+	dispatch: propTypes.func
 }
