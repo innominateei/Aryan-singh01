@@ -174,10 +174,15 @@ const currencies = [
 	[ 'ZWL', 'Zimbabwean Dollar' ] 
 ];
 
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export default function Selector(props) {
 
 	const handleChange = (e) => {
-		props.setCurrency(e.target.value);
+		// props.setCurrency(e.target.value);
+		props.dispatch({ type: `set${capitalizeFirstLetter(props.label)}`, payload: e.target.value });
 	}
 
   return (
@@ -186,7 +191,7 @@ export default function Selector(props) {
 				<label>{props.label}</label>
 			</div>
 			<div className='row'>
-				<FormControl variant='standard' sx={{ m: 0, minWidth: 100 }}>
+				<FormControl variant='standard' sx={{ m: 0, minWidth: 120 }}>
 					<Select
 						labelId={props.label}
 						id='outlined-basic'

@@ -1,19 +1,38 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import Selector from './Selector';
 import Spinner from './Spinner';
 import { Button, TextField } from '@mui/material';
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'setFrom':
+      return { ...state, from: action.payload };
+    case 'setTo':
+      return { ...state, to: action.payload };
+    case 'setAmount':
+      return { ...state, amount: action.payload };
+    case 'setLoading':
+      return { ...state, loading: action.payload };
+    case 'setResult':
+      return { ...state, result: action.payload };
+    default:
+      throw new Error();
+  }
+}
+
 export default function Converter(props) {
 
-  const [from, setFrom] = useState('AED');
-  const [to, setTo] = useState('AED');
-  const [amount, setAmount] = useState('1');
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('0');
+  const [state, dispatch] = useReducer(reducer, {
+    from: 'AED',
+    to: 'AED',
+    amount: '1',
+    loading: false,
+    result: '0'
+  });
 
   const convert = async () => {
 
-    setLoading(true);
+    dispatch({ type: 'setLoading', payload: true });
 
     const headers = new Headers();
     headers.append('apikey', props.apiKey);
@@ -23,34 +42,34 @@ export default function Converter(props) {
       headers: headers
     };
 
-    const responce = await fetch(`https://api.apilayer.com/exchangerates_data/convert?from=${from}&to=${to}&amount=${amount}`, options);
+    const responce = await fetch(`https://api.apilayer.com/exchangerates_data/convert?from=${state.from}&to=${state.to}&amount=${state.amount}`, options);
     const data = await responce.json();
-    setResult((parseFloat(data.info.rate) * parseFloat(amount)).toString());
-    setLoading(false);
+    dispatch({ type: 'setResult', payload: ((parseFloat(data.info.rate) * parseFloat(state.amount)).toString()) });
+    dispatch({ type: 'setLoading', payload: false });
   }
 
   const changeAmount = (Event) => {
     if(Event.target.value === undefined)
-      setAmount('');
+      dispatch({ type: 'setAmount', payload: '' });
     else
-      setAmount(Event.target.value);
+      dispatch({ type: 'setAmount', payload: Event.target.value });
   }
 
   return (
     <div className='container p-2'>
       <div className='row'>
         <div className='col mx-2 p-3'>
-          <Selector label='from' curr={from} setCurrency={setFrom} />
+          <Selector label='from' curr={state.from} dispatch={dispatch} />
         </div>
         <div className='col mx-2 p-3'>
-          <Selector label='to' curr={to} setCurrency={setTo} />
+          <Selector label='to' curr={state.to} dispatch={dispatch} />
         </div>
       </div>
       <div className='row'>
         <div className='col mx-2 p-2 d-flex justify-content-center'>
           <TextField 
             onChange={changeAmount} 
-            value={amount}
+            value={state.amount}
             id='outlined-basic' 
             label='Amount' 
             variant='outlined'
@@ -65,8 +84,8 @@ export default function Converter(props) {
       </div>
       <div className='row mt-3'>
         <div className='col mx-2 p-2 d-flex justify-content-center'>
-          { loading && <Spinner/> }
-          { !loading && <h2>Result: {result}</h2> }
+          { state.loading && <Spinner/> }
+          { !state.loading && <h2>Result: {state.result}</h2> }
         </div>
       </div>
     </div>
